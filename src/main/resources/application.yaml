@@ -1,0 +1,42 @@
+server:
+  port: 8085
+  servlet:
+    context-path: "/limits-core"
+spring:
+  application:
+    name: limits-core                      # Имя приложения
+  datasource:                             # Параметры подключения к БД
+    url: jdbc:postgresql://localhost:5432/db_limit?characterEncoding=utf-8
+    username: postgres
+    password: 3311
+    driver-class-name: org.postgresql.Driver
+    hikari:                               # Пул соединений Hikari
+      maximum-pool-size: 10               # max количество подключений в пуле
+      connection-timeout: 20000           # Тайм-аут соединения в миллисекундах, в течение которых клиент будет ждать нового соединения из пула.
+                                          # Он выдаст исключение, SQLException если в пуле нет доступных соединений.
+      minimum-idle: 5                     # мmin количество бездействующих подключений, которые следует поддерживать в пуле подключений.
+      idle-timeout: 900000                # max время в миллисекундах, в течение которого соединение может оставаться бездействующим в пуле, прежде чем оно будет удалено.
+      max-lifetime: 1000                  # max время в миллисекундах, в течение которого соединение может оставаться в пуле, прежде чем оно будет закрыто и заменено новым.
+  jpa:
+    show-sql: false                       # true - выводит в консоль запросы
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        show_sql: true                    # Показываь SQL
+    open-in-view: false
+    hibernate:
+      ddl-auto: none                     # none / create-drop
+  liquibase:
+    enabled: true                        # true / false - включить / выключить liquibase
+    url: jdbc:postgresql://localhost:5432/db_limit
+    change-log: classpath:/db/changelog/init-changelog.xml
+    liquibase-schema: public
+    default-schema: public
+    user: postgres
+    password: 3311
+application-settings:
+  limit-sitze: 10000                     # Лимит для каждого пользователя по, умолчанию
+  sheduler:
+    enabled: true
+    initial-delay: = 10000               # Начало работы после запуска приложения (миллисекунды)
+    fixed-delay: = 10000                 # Время в миллисекундах между запусками данной задачи
